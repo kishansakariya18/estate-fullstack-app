@@ -1,14 +1,13 @@
 import "./singlePage.scss";
 import Slider from "../../components/slider/Slider";
 import Map from "../../components/map/Map";
-import { userData } from "../../lib/dummydata";
 import { useLoaderData } from "react-router-dom";
+import DOMPurify from "dompurify";
 
 function SinglePage() {
   const post = useLoaderData();
   const singlePostData = post.post;
 
-  console.log("post::> ", singlePostData);
   return (
     <div className="singlePage">
       <div className="details">
@@ -29,7 +28,13 @@ function SinglePage() {
                 <span>{singlePostData.user.username}</span>
               </div>
             </div>
-            <div className="bottom">{singlePostData.postDetail.desc}</div>
+            <div
+              className="bottom"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(singlePostData.postDetail.desc),
+              }}
+            >
+            </div>
           </div>
         </div>
       </div>
@@ -90,7 +95,7 @@ function SinglePage() {
                 <span>School</span>
                 <p>
                   {singlePostData.postDetail.school > 999
-                    ? singlePostData.postDetail.school/1000 + "km"
+                    ? singlePostData.postDetail.school / 1000 + "km"
                     : singlePostData.postDetail.school + "m"}{" "}
                   away
                 </p>

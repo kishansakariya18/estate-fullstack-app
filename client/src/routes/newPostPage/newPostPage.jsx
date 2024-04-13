@@ -32,25 +32,27 @@ function NewPostPage() {
       property: inputs.property,
     };
 
-    const poseDetail = {
-      desc: String(inputs.desc),
+    const postDetail = {
+      desc: value,
       utilities: inputs.utilities,
       pet: inputs.pet,
       income: inputs.income,
       size: parseInt(inputs.size),
       school: parseInt(inputs.school),
       bus: parseInt(inputs.bus),
-      resturant: parseInt(inputs.resturant),
+      resturant: parseInt(inputs.restaurant),
     };
 
-    console.log(inputs);
     try {
       const res = await apiRequest.post("/post", {
         postData,
-        poseDetail,
+        postDetail,
       });
 
-      navigate("/" + res.data.data.id)
+
+      console.log('response of add post at client side :: ', res.data.data);
+
+      navigate("/" + res.data.data.createdPost.id)
     } catch (error) {
       console.log(error);
       setError(error.respoonse.data.message);

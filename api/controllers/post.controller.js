@@ -3,7 +3,22 @@ import prisma from "../lib/prisma.js";
 
 export const getPosts = async (req, res) => {
   try {
-    const posts = await prisma.post.findMany();
+    console.log('query:: ', req.query);
+      const query = req.query
+    const posts = await prisma.post.findMany({
+      where: {
+        city: query.city || undefined,
+        type: query.type || undefined,
+        property: query.property || undefined,
+        bedroom: parseInt(query.bedroom) || undefined,
+        price: {
+          gte: parseInt(query.minPrice) || 0,
+          lte: parseInt(query.maxPrice) || 10000
+        }
+      }
+    });
+
+    console.log('posts:: ', posts);
 
     return res
       .status(200)
@@ -50,6 +65,7 @@ export const getPost = async (req, res) => {
 export const addPost = async (req, res) => {
   const tokenUserId = req.userId;
   const body = req.body;
+
   try {
     const createdPost = await prisma.post.create({
       data: {
@@ -60,6 +76,8 @@ export const addPost = async (req, res) => {
         },
       },
     });
+
+
 
     return res
       .status(200)

@@ -1,3 +1,4 @@
+import { defer } from "react-router-dom";
 import apiRequest from "./apiRequest"
 
 export const singlePageLoader = async ({ request, params}) => {
@@ -14,10 +15,11 @@ export const listPageLoader = async ({ request, params}) => {
     try {
         console.log('request:: ', request);
         const query = request.url.split('?')[1];
-        const res = await apiRequest('/post?' + query)
-        console.log('res:: ', res.data.data.posts);
+        const postPromise =  apiRequest('/post?' + query)
+        return defer({
+            postResponse: postPromise
+        })
 
-        return res.data.data.posts
     } catch (error) {
         console.log('err in listpage loader:: ', error);
     }

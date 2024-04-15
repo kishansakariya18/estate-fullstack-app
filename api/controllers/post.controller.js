@@ -16,17 +16,19 @@ export const getPosts = async (req, res) => {
           lte: parseInt(query.maxPrice) || 10000
         }
       }
-    });
+    })
 
-    console.log('posts:: ', posts);
-
-    return res
+    setTimeout(() => {
+      return res
       .status(200)
       .json({
         status: 200,
         message: "Posts fetch successfully",
         data: { posts },
       });
+    }, 3000)
+
+    
   } catch (error) {
     catchError("Get Posts", error, req, res);
   }

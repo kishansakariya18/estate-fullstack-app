@@ -1,5 +1,6 @@
 import { catchError } from "../helper/utility.controller.js";
 import prisma from "../lib/prisma.js";
+import jwt from 'jsonwebtoken'
 
 export const getPosts = async (req, res) => {
   try {
@@ -18,7 +19,6 @@ export const getPosts = async (req, res) => {
       }
     })
 
-    setTimeout(() => {
       return res
       .status(200)
       .json({
@@ -26,8 +26,6 @@ export const getPosts = async (req, res) => {
         message: "Posts fetch successfully",
         data: { posts },
       });
-    }, 3000)
-
     
   } catch (error) {
     catchError("Get Posts", error, req, res);
@@ -52,12 +50,36 @@ export const getPost = async (req, res) => {
       },
     });
 
+    let userId;
+    const token = req.cookies?.token
+
+    if(!token){
+      userId = null;
+    } else {
+      jwt.verify(token, process.env.JWT_SECRETE_KEY, async (err, payload) => {
+        if(err){
+          userId = null
+        } else {
+          userId = payload.id
+        }
+      })
+    }
+
+    const saved = await prisma.savedPost.findUnique({
+      where: {
+        userId_postId: {
+          userId: userId,
+          postId: postId
+        }
+      }
+    })
+
     return res
       .status(200)
       .json({
         status: 200,
         message: "Post fetch successfully",
-        data: { post },
+        data: { post : { ...post, isSaved: saved ? true: false} },
       });
   } catch (error) {
     catchError("Get Post", error, req, res);

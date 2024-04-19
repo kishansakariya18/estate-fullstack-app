@@ -23,3 +23,12 @@ export const listPageLoader = async ({ request, params}) => {
         console.log('err in listpage loader:: ', error);
     }
 }
+
+export const profilePageLoader  = async ({requst, params}) => {
+    const postPromise = apiRequest('/user/profilePosts')
+
+    console.log('postPromis:: ', postPromise);
+    return defer({
+        postResponse: postPromise
+    })
+}

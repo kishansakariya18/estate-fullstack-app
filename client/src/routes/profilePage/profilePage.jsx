@@ -1,33 +1,32 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Await, Link, useLoaderData, useNavigate } from "react-router-dom";
 import Chat from "../../components/chat/Chat";
 import List from "../../components/list/List";
 import apiRequest from "../../lib/apiRequest";
 import "./profilePage.scss";
-import { useContext, useState } from "react";
+import { Suspense, useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
 function ProfilePage() {
+  const data = useLoaderData();
   const navigate = useNavigate();
-  const [error, setError] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const { currentUser, updateUser } = useContext(AuthContext)
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { currentUser, updateUser } = useContext(AuthContext);
   const handleLogout = async () => {
     try {
-      setIsLoading(true)
-      setError("")
-      await apiRequest.post('/auth/logout')
+      setIsLoading(true);
+      setError("");
+      await apiRequest.post("/auth/logout");
 
-      updateUser(null)
-      navigate("/")
-
-
+      updateUser(null);
+      navigate("/");
     } catch (error) {
       console.log(error);
-      setError(error.response.data.message)
+      setError(error.response.data.message);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="profilePage">
@@ -36,16 +35,13 @@ function ProfilePage() {
           <div className="title">
             <h1>User Information</h1>
             <Link to={"/profile/update"}>
-            <button>Update Profile</button>
+              <button>Update Profile</button>
             </Link>
           </div>
           <div className="info">
             <span>
               Avatar:
-              <img
-                src={currentUser?.avatar || 'noavatar.jpg'}
-                alt=""
-              />
+              <img src={currentUser?.avatar || "noavatar.jpg"} alt="" />
             </span>
             <span>
               Username: <b>{currentUser.username}</b>
@@ -53,20 +49,43 @@ function ProfilePage() {
             <span>
               E-mail: <b>{currentUser.email}</b>
             </span>
-            <button onClick={handleLogout} disabled={isLoading}>Logout</button>
+            <button onClick={handleLogout} disabled={isLoading}>
+              Logout
+            </button>
             {error && <span>{error}</span>}
           </div>
           <div className="title">
             <h1>My List</h1>
             <Link to={"/add"}>
-            <button>Create New Post</button>
+              <button>Create New Post</button>
             </Link>
           </div>
-          <List />
+          <Suspense fallback={<p>Loading...</p>}>
+            <Await
+              resolve={data.postResponse}
+              errorElement={<p>Error loading posts!</p>}
+            >
+              {(postResponse) => (
+                <List posts={postResponse.data.data.userPosts} />
+              )}
+            </Await>
+          </Suspense>
+
           <div className="title">
             <h1>Saved List</h1>
           </div>
-          <List />
+
+          <Suspense fallback={<p>Loading...</p>}>
+            <Await
+              resolve={data.postResponse}
+              errorElement={<p>Error loading posts!</p>}
+            >
+              {(postResponse) => (
+
+                <List posts={postResponse.data.data.savedPosts} />
+              )}
+            </Await>
+          </Suspense>
         </div>
       </div>
       <div className="chatContainer">

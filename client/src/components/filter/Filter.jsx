@@ -8,9 +8,9 @@ function Filter() {
     type: searchParams.get('type') || "",
     city: searchParams.get('city') || "",
     property: searchParams.get('property') || "",
-    maxPrice: searchParams.get('maxPrice') || 0,
-    minPrice: searchParams.get('minPrice') || 1000000,
-    bedRoom: searchParams.get('bedRoom') || 1,
+    maxPrice: searchParams.get('maxPrice') || 10000000,
+    minPrice: searchParams.get('minPrice') || 0,
+    bedRoom: searchParams.get('bedRoom') || '',
   })
 
   const handleChange = e => {

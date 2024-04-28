@@ -7,7 +7,7 @@ function HomePage() {
 
   const {currentUser} = useContext(AuthContext)
 
-  console.log('currentUser::> ',currentUser);
+  console.log('current user::> ' ,currentUser);
   return (
     <div className="homePage">
       <div className="textContainer">

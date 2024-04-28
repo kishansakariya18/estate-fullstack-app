@@ -4,8 +4,9 @@ import jwt from 'jsonwebtoken'
 
 export const getPosts = async (req, res) => {
   try {
-    console.log('query:: ', req.query);
-      const query = req.query
+    const query = req.query
+    console.log('query::', query);
+    
     const posts = await prisma.post.findMany({
       where: {
         city: query.city || undefined,
@@ -14,11 +15,12 @@ export const getPosts = async (req, res) => {
         bedroom: parseInt(query.bedroom) || undefined,
         price: {
           gte: parseInt(query.minPrice) || 0,
-          lte: parseInt(query.maxPrice) || 10000
+          lte: parseInt(query.maxPrice) || 10000000
         }
       }
     })
 
+  console.log('post:: ', posts)
       return res
       .status(200)
       .json({

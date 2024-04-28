@@ -50,13 +50,11 @@ export const updateUser = async (req, res) => {
       },
     });
     const { password: userPassword, ...restInfo } = updatedUser;
-    return res
-      .status(200)
-      .json({
-        status: 200,
-        message: "User updated successfully ",
-        data: { updatedUser: restInfo },
-      });
+    return res.status(200).json({
+      status: 200,
+      message: "User updated successfully ",
+      data: { updatedUser: restInfo },
+    });
   } catch (error) {
     catchError("Update User", error, req, res);
   }
@@ -74,13 +72,11 @@ export const deleteUser = async (req, res) => {
       where: { id },
     });
 
-    return res
-      .status(200)
-      .json({
-        status: 200,
-        message: "User deleted successfully ",
-        data: { deletedUser },
-      });
+    return res.status(200).json({
+      status: 200,
+      message: "User deleted successfully ",
+      data: { deletedUser },
+    });
   } catch (error) {
     catchError("Delete Users", error, req, res);
   }
@@ -129,29 +125,57 @@ export const savePost = async (req, res) => {
 };
 
 export const profilePosts = async (req, res) => {
-    try {
-      const tokenUserId = req.userId;
-      const userPosts = await prisma.post.findMany({
-        where: {
-          userId: tokenUserId,
-        },
+  try {
+    const tokenUserId = req.userId;
+    const userPosts = await prisma.post.findMany({
+      where: {
+        userId: tokenUserId,
+      },
+    });
+
+    const saved = await prisma.savedPost.findMany({
+      where: {
+        userId: tokenUserId,
+      },
+      include: {
+        post: true,
+      },
+    });
+
+    const savedPosts = saved.map((item) => item.post);
+    return res
+      .status(200)
+      .json({
+        status: 200,
+        message: "User fetch successfully ",
+        data: { userPosts, savedPosts },
       });
+  } catch (error) {
+    catchError("Get Users", error, req, res);
+  }
+};
 
-      const saved = await prisma.savedPost.findMany({
-        where: {
-            userId: tokenUserId
+export const getNotificationNumber = async (req,res) => {
+  try {
+    const tokenUserId = req.userId;
+    console.log(tokenUserId);
+    const number = await prisma.chat.count({
+      where: {
+        userIDs: {
+          hasSome: [tokenUserId],
         },
-        include: {
-            post: true
-        }
-      })
-
-
-      const savedPosts = saved.map((item) => item.post)
-      return res
-        .status(200)
-        .json({ status: 200, message: "User fetch successfully ", data: { userPosts, savedPosts } });
-    } catch (error) {
-      catchError("Get Users", error, req, res);
-    }
-  };
+        NOT: {
+          seenBy: {
+            hasSome: [tokenUserId],
+          },
+        },
+      },
+    });
+    return res.status(200).json(number);
+  } catch (error) {
+    console.log('err:: ', error);
+    return res
+      .status(500)
+      .json({ message: "failed to get notification number" });
+  }
+};

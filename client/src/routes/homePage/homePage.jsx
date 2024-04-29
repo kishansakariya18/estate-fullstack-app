@@ -14,15 +14,12 @@ function HomePage() {
         <div className="wrapper">
           <h1 className="title">Find Real Estate & Get Your Dream Place</h1>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos
-            explicabo suscipit cum eius, iure est nulla animi consequatur
-            facilis id pariatur fugit quos laudantium temporibus dolor ea
-            repellat provident impedit!
+          Welcome to Angan Estate Real Estate, your trusted partner for all your real estate needs. With our expert guidance, personalized service, and commitment to integrity, we are here to help you find your dream home, sell your property, or make smart investment decisions. Explore our comprehensive services, browse our listings, and start your real estate journey with us today.
           </p>
           <SearchBar />
           <div className="boxes">
             <div className="box">
-              <h1>16+</h1>
+              <h1>6+</h1>
               <h2>Years of Experience</h2>
             </div>
             <div className="box">

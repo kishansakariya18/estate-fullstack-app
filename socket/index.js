@@ -25,8 +25,6 @@ io.on("connection", (socket) => {
 
     socket.on("newUser", (userId) => {
         addUser(userId, socket.id)
-
-        console.log(onlineUser)
     })
 
 
@@ -34,8 +32,6 @@ io.on("connection", (socket) => {
 
         const receiver = getUser(receiverId);
         io.to(receiver.socketId).emit("getMessage", data)
-        console.log('rec. Id: ', receiverId)
-        console.log('data:: ', data);
     })
 
     socket.on("disconnect", () => {

@@ -7,9 +7,9 @@ export const SocketContext = createContext();
 export const SocketContextProvider = ({ children }) => {
   const { currentUser } = useContext(AuthContext);
   const [socket, setSocket] = useState(null);
-
+  console.log('socker url :: ',  import.meta.env.VITE_APP_SOCKET_URL)
   useEffect(() => {
-    setSocket(io("http://localhost:4000"));
+    setSocket(io(import.meta.env.VITE_APP_SOCKET_URL));
   }, []);
 
   useEffect(() => {

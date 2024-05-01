@@ -38,5 +38,5 @@ io.on("connection", (socket) => {
         removeUser(socket.id)
     })
 })
-
-io.listen("4000")
+const port = process.env.PORT || 4000
+io.listen(port)

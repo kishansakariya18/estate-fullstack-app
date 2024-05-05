@@ -10,7 +10,7 @@ import chatRoutes from "./routes/chat.routes.js"
 import messageRoutes from "./routes/message.routes.js"
 const app = express()
 
-app.use(cors({ origin: process.env.REACT_URL , credentials: true  })) //? chage in production
+app.use(cors())//? chage in production
 app.use(cookieParser());
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
